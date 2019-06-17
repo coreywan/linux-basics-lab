@@ -1,7 +1,19 @@
-- hosts: jumphost
+# - hosts: jumphost
+#   gather_facts: false
+#   tasks:
+#     - name: Install openshift-ansible
+#       package:
+#         name: openshift-ansible
+#       become: true
+
+- hosts: rhel
   gather_facts: false
   tasks:
-    - name: Install openshift-ansible
-      package:
-        name: openshift-ansible
+    - name: Enable Passwordless Sudo
       become: true
+      block:
+        - name: Replace file
+          lineinfile:
+            path: /etc/sudoers
+            regexp: '^%sudo   ALL='
+            line: "%sudo   ALL=(ALL:ALL) NOPASSWD: ALL"
